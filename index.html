@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="reset.css">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <title>Rock Paper Scissors </title>
+</head>
+<body>
+    
+    <!-- 
+        HTML required:
+        -buttons for player choices
+        -display for player/comp choices for round
+        -scoreboard
+    -->
+    <h1>
+        Rock Paper Scissors!
+    </h1>
+        <div id="contentContainer">
+        <div id="scoreboard">
+            <p>Player Score: <span id="playerScore">0</span></p>
+            <p>Computer Score: <span id="compScore">0</span></p>
+        </div>
+        <div id="moveContainer">
+            <span id="buttonText">What's your move?</span>
+            <div id="buttonContainer">
+                <button type="button" id="btnRock">Rock</button>
+                <button type="button" id="btnPaper">Paper</button>
+                <button type="scissors" id="btnScissors">Scissors</button>
+            </div>
+        </div>
+        <div id="roundStatusContainer">
+            <span>Round <span id="round"></span> Results:</span><br>
+            <span id="roundStatus"></span>  <!-- Update this -->
+        </div>
+    </div>
+
+    <script>
+        // RPS algorithm
+        // check, display score
+        let playerScore = 0;
+        let compScore = 0;
+        let roundNum = 0;
+
+        function scorekeep(winner) {
+            roundNum += 1;
+            switch (winner) {
+                case "player": 
+                    playerScore += 1;
+                    break;
+                case "computer": 
+                    compScore += 1;
+                    break;
+                default: 
+                    break;
+            }
+        }
+
+        // generate random number between 0-2 to pick computer choice
+        function compTurn() {
+            let randomNum = Math.floor(Math.random() * 3);
+            switch(randomNum) {
+                case 0: 
+                    return "rock";
+                    break;
+                case 1: 
+                    return "paper";
+                    break;
+                case 2: 
+                    return "scissors";
+                    break;
+            }
+        }
+        // compare choices, determine winner
+        function roundWin(playerTurn, compTurn) {
+            switch(playerTurn) {
+                case "rock": 
+                    switch(compTurn) {
+                        case "rock": 
+                            return "tie";
+                            break;
+                        case "paper": 
+                            return "computer";
+                            break;
+                        case "scissors": 
+                            return "player";
+                            break;
+                    }
+                case "paper": 
+                    switch(compTurn) {
+                        case "rock": 
+                            return "player";
+                            break;
+                        case "paper": 
+                            return "tie";
+                            break;
+                        case "scissors": 
+                            return "computer";
+                            break;
+                    }
+                case "scissors": 
+                    switch(compTurn) {
+                        case "rock": 
+                            return "computer";
+                            break;
+                        case "paper": 
+                            return "player";
+                            break;
+                        case "scissors": 
+                            return "tie";
+                            break;
+                    }
+            }
+        }
+
+        // update 
+        function scoreUpdate(playerScore, compScore) {
+            document.getElementById('playerScore').textContent = playerScore;
+            document.getElementById('compScore').textContent = compScore;
+            document.getElementById('round').textContent = roundNum;
+        }
+
+        function scoreReset() {
+            playerScore, compScore, roundNum = 0;
+            scoreUpdate(0,0);
+        }
+
+        function gameWin(playerScore, compScore, roundWinner, playerChoice, compChoice) {
+            if (playerScore == 5 || compScore == 5) {
+                document.getElementById('roundStatus').textContent = "Player picked " + playerChoice + "! Computer picked " + compChoice + "! " + roundWinner + " wins the round, and the match!";
+                scoreReset();
+            } else if (roundWinner == "tie") {
+                document.getElementById('roundStatus').textContent = "Both players picked " + playerChoice + "! It's a tie!";
+            } else {
+                document.getElementById('roundStatus').textContent = "Player picked " + playerChoice + "! Computer picked " + compChoice + "! " + roundWinner + " wins!";
+            }
+        }
+
+        // trigger round by having player click choice
+        function playRound(playerChoice) {
+            let compChoice = compTurn();
+            let roundWinner = roundWin(playerChoice, compChoice);
+            scorekeep(roundWinner);
+            scoreUpdate(playerScore, compScore);
+            gameWin(playerScore, compScore, roundWinner, playerChoice, compChoice);
+            }
+
+        const btnRock = document.querySelector('#btnRock');
+        btnRock.addEventListener('click', () => {
+            playRound("rock");
+        });
+
+        const btnPaper = document.querySelector('#btnPaper');
+        btnPaper.addEventListener('click', () => {
+            playRound("paper");
+        });
+
+        const btnScissors = document.querySelector('#btnScissors');
+        btnScissors.addEventListener('click', () => {
+            playRound("scissors");
+        });
+
+    </script>
+    
+</body>
+</html>
