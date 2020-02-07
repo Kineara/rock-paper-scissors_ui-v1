@@ -9,13 +9,6 @@
     <title>Rock Paper Scissors </title>
 </head>
 <body>
-    
-    <!-- 
-        HTML required:
-        -buttons for player choices
-        -display for player/comp choices for round
-        -scoreboard
-    -->
     <h1>
         Rock Paper Scissors!
     </h1>
@@ -39,27 +32,28 @@
     </div>
 
     <script>
-        // RPS algorithm
-        // check, display score
         let playerScore = 0;
         let compScore = 0;
-        let roundNum = 0;
 
         function scorekeep(winner) {
-            roundNum += 1;
             switch (winner) {
                 case "player": 
                     playerScore += 1;
+                    document.getElementById('playerScore').textContent = playerScore;
                     break;
                 case "computer": 
                     compScore += 1;
+                    document.getElementById('compScore').textContent = compScore;
                     break;
-                default: 
+                case "restart":
+                    document.getElementById('playerScore').textContent = playerScore;
+                    document.getElementById('compScore').textContent = compScore;
+                    break;
+                case "default": 
                     break;
             }
         }
 
-        // generate random number between 0-2 to pick computer choice
         function compTurn() {
             let randomNum = Math.floor(Math.random() * 3);
             switch(randomNum) {
@@ -74,7 +68,7 @@
                     break;
             }
         }
-        // compare choices, determine winner
+
         function roundWin(playerTurn, compTurn) {
             switch(playerTurn) {
                 case "rock": 
@@ -116,22 +110,17 @@
             }
         }
 
-        // update 
-        function scoreUpdate(playerScore, compScore) {
-            document.getElementById('playerScore').textContent = playerScore;
-            document.getElementById('compScore').textContent = compScore;
-            document.getElementById('round').textContent = roundNum;
-        }
-
         function scoreReset() {
-            playerScore, compScore, roundNum = 0;
-            scoreUpdate(0,0);
+            playerScore = 0;
+            compScore = 0;
+            scorekeep("restart");
+            console.log("reset");
         }
 
-        function gameWin(playerScore, compScore, roundWinner, playerChoice, compChoice) {
+        function gameWin(roundWinner, playerChoice, compChoice) {
             if (playerScore == 5 || compScore == 5) {
-                document.getElementById('roundStatus').textContent = "Player picked " + playerChoice + "! Computer picked " + compChoice + "! " + roundWinner + " wins the round, and the match!";
                 scoreReset();
+                document.getElementById('roundStatus').textContent = "Player picked " + playerChoice + "! Computer picked " + compChoice + "! " + roundWinner + " wins the round, and the match!";
             } else if (roundWinner == "tie") {
                 document.getElementById('roundStatus').textContent = "Both players picked " + playerChoice + "! It's a tie!";
             } else {
@@ -139,13 +128,11 @@
             }
         }
 
-        // trigger round by having player click choice
         function playRound(playerChoice) {
             let compChoice = compTurn();
             let roundWinner = roundWin(playerChoice, compChoice);
             scorekeep(roundWinner);
-            scoreUpdate(playerScore, compScore);
-            gameWin(playerScore, compScore, roundWinner, playerChoice, compChoice);
+            gameWin(roundWinner, playerChoice, compChoice);
             }
 
         const btnRock = document.querySelector('#btnRock');
