@@ -119,8 +119,9 @@
 
         function gameWin(roundWinner, playerChoice, compChoice) {
             if (playerScore == 5 || compScore == 5) {
+                document.getElementById('roundStatus').textContent = "Player picked " + playerChoice + "! Computer picked " + compChoice + "! " + roundWinner +
+                " wins the round, and the match, " + playerScore + " to " + compScore + "!";
                 scoreReset();
-                document.getElementById('roundStatus').textContent = "Player picked " + playerChoice + "! Computer picked " + compChoice + "! " + roundWinner + " wins the round, and the match!";
             } else if (roundWinner == "tie") {
                 document.getElementById('roundStatus').textContent = "Both players picked " + playerChoice + "! It's a tie!";
             } else {
